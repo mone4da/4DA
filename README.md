@@ -26,7 +26,7 @@ Our goal is to empower you to leverage our transformative technologies, such as 
 
 To get started, visit our documentation and explore the various resources available. Whether you're a seasoned developer or a curious enthusiast, there's something here for everyone.
 
-**Visit 4DA Documentation:** [4DA Documentation](https://docs.4da.com)
+**Visit 4DA Documentation:** [4DA Documentation](https://github.com/mone4da/4da/docs/README.md)
 
 ## Join the Community
 
