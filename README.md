@@ -8,7 +8,7 @@ Welcome to the official repository of 4 Digital Asset (4DA), your gateway to tra
 
 Before you dive into the 4DA repository, we'd like to introduce you to "plusmedium," our experimental playground for developers. "plusmedium" is where creativity knows no bounds, and developers can experiment with cutting-edge technologies and ideas. It's a space for innovation, exploration, and collaboration.
 
-**Visit "plusmedium" here:** [plusmedium Repository](https://github.com/plusmedium)
+**Visit "plusmedium" here:** [plusmedium Repository](https://github.com/mone4da/plusmedium.git)
 
 ## What to Expect
 
