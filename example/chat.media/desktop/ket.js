@@ -1,5 +1,5 @@
 class LocalVideo{
-  constructor(id, onTracks){
+  constructor(id, onStream){
     let video = document.getElementById(id)
 
     navigator
@@ -8,7 +8,7 @@ class LocalVideo{
       .then(stream => {
         video.srcObject = stream
         this.stream = stream
-          onTracks(stream.getTracks())
+          onStream(stream)
       })
   }
 }
@@ -33,7 +33,7 @@ class RemoteVideo{
 
 export default class XKet{
     constructor(){
-        this.localVideo = new LocalVideo('localVideo', tracks => this.onTracks(tracks))
+        this.localVideo = new LocalVideo('localVideo', stream => this.onStream(stream))
 
         document.getElementById('call').onclick = () => {
           this.onCall()
@@ -46,6 +46,10 @@ export default class XKet{
         document.getElementById('hangup').onclick = () => {
           this.onHangup()
         }
+    }
+
+    getLocalStream(){
+      return this.localVideo.stream
     }
 
     startRemoteVideo(tracks){
@@ -79,5 +83,5 @@ export default class XKet{
     onCall(){}
     onHangup(){}
     onAnswer(){}
-    onTracks(_){}
+    onStream(_){}
 }

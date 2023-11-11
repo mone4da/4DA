@@ -1,18 +1,6 @@
 class Peer{
-    constructor(handle){
-        this.config = {
-            iceServers: [
-                {
-                    urls: [
-                        'stun:stun.l.google.com:19302', 
-                        'stun:stun1.l.google.com:19302', 
-                        'stun:stun2.l.google.com:19302',
-                        'stun:stun3.l.google.com:19302']
-                }
-            ]
-        }
-
-        this.conn = new RTCPeerConnection(this.config)
+    constructor(config, handle){
+        this.conn = new RTCPeerConnection(config)
         this.conn.ontrack = event => handle('track', {source: this,  tracks: event.streams[0].getTracks()})
         this.conn.onicecandidate = async event => event.candidate && handle('ice', {source: this, candidate: event.candidate})
 

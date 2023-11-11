@@ -2,23 +2,40 @@ import {Caller, Callee} from './lib/peer.js'
 import XKet from "./ket.js"
 import XBra from "./bra.js"
 
-let caller = null
-let callee = null
+const RTCPconfig = {
+    iceServers: [
+        {
+            urls: [
+                'stun:stun.l.google.com:19302', 
+                'stun:stun1.l.google.com:19302', 
+                'stun:stun2.l.google.com:19302',
+                'stun:stun3.l.google.com:19302']
+        }
+    ]
+}
+
+
+let peer = null
 
 class Ket extends XKet{
     constructor(){
         super()
     }
 
+    answer(answer){
+        super.answer(answer)
+        peer.shareLocalStream(ket.getLocalStream())
+    }
+
     createOffer(){
-        this.caller.createOffer().then(offer => {
+        peer.createOffer().then(offer => {
             bra.offer(offer)
         } )
     }
 
     onCall(){
-        if (!caller){
-            caller = new Caller((id, data) => {
+        if (!peer){
+            peer = new Caller(RTCPconfig, (id, data) => {
                 switch(id){
                     case 'initialized' : this.createOffer(); break;
                     case 'tracks' : this.startRemoteVideo(data.tracks); break;
@@ -29,8 +46,8 @@ class Ket extends XKet{
     }
 
     onAnswer(){
-        if (callee){
-            callee.createAnswer(this.offer).then(answer => {
+        if (peer){
+            peer.createAnswer(this.offer).then(answer => {
                 bra.answer(answer)
             })
         }
@@ -48,8 +65,8 @@ class Bra extends XBra{
     }
 
     onOffer(data){
-        if (!callee){
-            this.callee = new Callee((id, data) => {
+        if (!peer){
+            peer = new Callee(RTCPconfig, (id, data) => {
                 switch(id){
                     case 'initialized' : ket.offer(data); break;
                     case 'tracks' : this.startRemoteVideo(data.tracks); break;
@@ -64,7 +81,7 @@ class Bra extends XBra{
     }
 
     onIce(data){
-        ket.ice(data)
+        peer && peer.addCandidate(data)
     }
 
     onHangup(data){
