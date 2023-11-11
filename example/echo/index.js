@@ -3,6 +3,8 @@ const config = require('./config').app
 class App extends require('./prompt'){
 	constructor(){
 		super(config)
+
+		this.last = Date.now()
 	}
 
 	onGranted(data){
@@ -11,8 +13,11 @@ class App extends require('./prompt'){
 	}
 
 	onEcho(data){
-		console.log('from', data.from, data.detail)
-		this.echo(data.from, data.detail)
+
+		console.log(data.detail, data.detail - this.last)
+		this.echo(data.from, Date.now())
+
+		this.last = data.detail
 	}
 }
 
