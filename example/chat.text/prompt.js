@@ -12,14 +12,24 @@ class Prompt extends require('./core/session'){
 		this.connect(config.host)
 	}
 
+	trySignin(){
+		!this.signedin && this.signin(this.credentials)
+	}
+
 	close(){
 		this.signoff(this.credentials)
+		this.signedin = false
+
 	}
 
 	onCommand(data, valid, signal){
 		switch(data.subject){
 			case 'text' : this.onText(data); break;
 		}
+	}
+
+	trySignin(){
+		!this.signedin && this.signin(this.credentials)
 	}
 
 	onError(data){
@@ -32,6 +42,7 @@ class Prompt extends require('./core/session'){
 	}
 
 	onGranted(data){
+		this.signedin = true
 		console.log('granted', data)
 	}
 

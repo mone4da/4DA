@@ -4,9 +4,11 @@ export default class XKet{
 
         let text = document.getElementById('textout')
         text.onkeyup = event => {
-          (event.key === 'Enter') && 
-          (text.value.trim() !== '') && 
-          this.onText(text.value)
+          let data = text.value.trim()
+          if ((event.key === 'Enter') && (data !== '')){
+            this.onText(data)
+            text.value = ''
+          }
         }
     }
 

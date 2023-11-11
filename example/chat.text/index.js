@@ -5,8 +5,11 @@ class Bra extends require('./prompt'){
 		super(config.prompt)
 	}
 
+	text(data){
+		super.text(data)
+	}
+
 	onText(data){
-		console.log('text', data)
 		ket.text(data)
 	}
 }
@@ -18,6 +21,8 @@ class Ket{
 	open(socket){
 		this.socket = socket
 		this.socket.on('text', data => bra.text(data))
+
+		bra.trySignin()
 	}
 
 	notify(id, data){

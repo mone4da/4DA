@@ -7,4 +7,15 @@ html, body{
 #root{
     display: flex;
     flex-direction: column;
+    align-items: center;
+}
+
+#textin{
+    width: 600px;
+    height: 300px;
+}
+
+#textout{
+    width: 600px;
+    height: 100px;
 }
