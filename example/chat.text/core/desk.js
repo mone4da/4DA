@@ -15,16 +15,14 @@ class Desk{
 	}
 
 	dispatch(io){
-		let session = this.createSession()
-
 		io.on('connection', socket => {
-			session.open(socket)
-
+			let session = this.createSession(socket)
 			socket.on('disconnect', () => session.close())
 		})
 	}
 
 	onListening(){}
+	createSession(_){}
 }
 
 module.exports = Desk

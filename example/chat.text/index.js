@@ -1,28 +1,26 @@
 const config = require('./config')
 
 class Bra extends require('./prompt'){
-	constructor(){
+	constructor(ket){
 		super(config.prompt)
-	}
-
-	text(data){
-		super.text(data)
+		this.ket = ket
 	}
 
 	onText(data){
-		ket.text(data)
+		this.ket.text(data)
 	}
 }
 
 class Ket{
-	constructor(){
+	constructor(socket){
+		this.open(socket)
 	}
 
 	open(socket){
-		this.socket = socket
-		this.socket.on('text', data => bra.text(data))
+		this.bra = new Bra(this)
 
-		bra.trySignin()
+		this.socket = socket
+		this.socket.on('text', data => this.bra.text(data))
 	}
 
 	notify(id, data){
@@ -30,7 +28,7 @@ class Ket{
 	}
 
 	close(){
-		bra.close()
+		this.bra.close()
 	}
 
 	text(data){
@@ -45,10 +43,8 @@ class Desk extends require('./core/desk'){
 	}
 
 	createSession(socket){
-		return ket
+		return new Ket(socket)
 	}
 }
 
-let ket = new Ket()
-let bra = new Bra()
 new Desk()
