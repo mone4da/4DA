@@ -7,32 +7,22 @@ class Prompt extends require('./core/session'){
 		this.credentials = config.credentials
 		this.address = config.credentials.address
 		this.greeting = config.greeting
-		this.buddy = config.buddy
+		this.buddy = config.peers.buddy
 
 		this.connect(config.host)
 	}
 
-	trySignin(){
-		!this.signedin && this.signin(this.credentials)
-	}
-
 	close(){
 		this.signoff(this.credentials)
-		this.signedin = false
-
 	}
 
 	onCommand(data, valid, signal){
 		switch(data.subject){
+			case 'text' : this.onText(data); break;
 			case 'offer' : this.onOffer(data); break;
 			case 'answer' : this.onAnswer(data); break;
 			case 'ice' : this.onIce(data); break;
-			case 'hangup' : this.onHangup(data); break;
 		}
-	}
-
-	trySignin(){
-		!this.signedin && this.signin(this.credentials)
 	}
 
 	onError(data){
@@ -45,7 +35,6 @@ class Prompt extends require('./core/session'){
 	}
 
 	onGranted(data){
-		this.signedin = true
 		console.log('granted', data)
 	}
 
@@ -54,12 +43,22 @@ class Prompt extends require('./core/session'){
 	}
 
 	//custom event
+	onText(_){}
 	onOffer(_){}
 	onAnswer(_){}
 	onIce(_){}
-	onHangup(){}
+
 
 	//custom method
+	text(data){
+		this.send('data',msg.create(
+			this.address,
+			this.buddy,
+			'text',
+			data
+		))
+	}
+
 	offer(data){
 		this.send('data',msg.create(
 			this.address,
@@ -87,14 +86,6 @@ class Prompt extends require('./core/session'){
 		))
 	}
 
-	hangup(data){
-		this.send('data',msg.create(
-			this.address,
-			this.buddy,
-			'hangup',
-			data
-		))
-	}
 }
 
 module.exports = Prompt

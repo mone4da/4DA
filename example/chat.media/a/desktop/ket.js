@@ -53,6 +53,7 @@ export default class XKet{
     }
 
     startRemoteVideo(tracks){
+      console.log('startRemoteVideo', tracks)
       if (!this.RemoteVideo){
         this.remoteVideo = new RemoteVideo('remoteVideo')
         this.RemoteVideo.start(tracks)
@@ -64,8 +65,14 @@ export default class XKet{
     }
 
     offer(data){
-      this.offer = this.offer
+      this.peerOffer = data
       console.log('offer', data)
+
+      let call = document.getElementById('call')
+      let answer = document.getElementById('answer')
+
+      answer.style.display = 'block'
+      call.style.display = 'none'
     }
 
     answer(data){

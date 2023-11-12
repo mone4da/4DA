@@ -7,13 +7,18 @@ class Prompt extends require('./core/session'){
 		this.credentials = config.credentials
 		this.address = config.credentials.address
 		this.greeting = config.greeting
+		this.buddy = config.buddy
 
 		this.connect(config.host)
 	}
 
+	close(){
+		this.signoff(this.credentials)
+	}
+
 	onCommand(data, valid, signal){
 		switch(data.subject){
-			case 'echo' : this.onEcho(data); break;
+			case 'text' : this.onText(data); break;
 		}
 	}
 
@@ -35,15 +40,14 @@ class Prompt extends require('./core/session'){
 	}
 
 	//custom event
-	onEcho(_){}
-
+	onText(_){}
 
 	//custom method
-	echo(to, data){
+	text(data){
 		this.send('data',msg.create(
 			this.address,
-			to,
-			'echo',
+			this.buddy,
+			'text',
 			data
 		))
 	}

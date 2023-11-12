@@ -1,43 +1,43 @@
 const config = require('./config')
 
 class Bra extends require('./prompt'){
-	constructor(){
+	constructor(ket){
 		super(config.prompt)
-	}
 
-	text(data){
-		super.text(data)
+		this.ket = ket
 	}
 
 	onOffer(data){
-		ket.offer(data)
+		this.ket.offer(data)
 	}
 
 	onAnswer(data){
-		ket.answer(data)
+		console.log('Prompt:answer', data)
+		this.ket.answer(data)
 	}
 
 	onIce(data){
-		ket.ice(data)
+		this.ket.ice(data)
 	}
 
 	onHangup(data){
-		ket.hangup(data)
+		this.ket.hangup(data)
 	}
 }
 
 class Ket{
-	constructor(){
+	constructor(socket){
+		this.open(socket)
 	}
 
 	open(socket){
 		this.socket = socket
-		this.socket.on('offer', data => bra.offer(data))
-		this.socket.on('answer', data => bra.answer(data))
-		this.socket.on('ice', data => bra.ice(data))
-		this.socket.on('hangup', data => bra.hangup(data))
+		this.socket.on('offer', data => this.bra.offer(data))
+		this.socket.on('answer', data => this.bra.answer(data))
+		this.socket.on('ice', data => this.bra.ice(data))
+		this.socket.on('hangup', data => this.bra.hangup(data))
 
-		bra.trySignin()
+		this.bra = new Bra(this)
 	}
 
 	notify(id, data){
@@ -45,7 +45,7 @@ class Ket{
 	}
 
 	close(){
-		bra.close()
+		this.bra.close()
 	}
 
 	offer(data){
@@ -73,10 +73,8 @@ class Desk extends require('./core/desk'){
 	}
 
 	createSession(socket){
-		return ket
+		return new Ket(socket)
 	}
 }
 
-let ket = new Ket()
-let bra = new Bra()
 new Desk()

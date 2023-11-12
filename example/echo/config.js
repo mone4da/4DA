@@ -5,9 +5,9 @@ module.exports = {
 		greeting: 'welcome to echo',
 
 		credentials: {
-			accesskey: 'ACCESSKEY',
-			password: 'PASSWORD',
-			address: 'ADDRESS'
+			accesskey: '000001',
+			password: '6bfac614-d32e-40c4-a1a3-f9ef507986e0',
+			address: 'echo-sam!plusmedium!4digitalasset!com'
 		},
 
 		peers: {

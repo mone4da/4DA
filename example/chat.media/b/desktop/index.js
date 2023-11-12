@@ -27,7 +27,9 @@ class Ket extends XKet{
         peer.shareLocalStream(ket.getLocalStream())
     }
 
-    createOffer(){
+    createOffer(p){
+        console.log('createOffer', p)
+        peer = p
         peer.createOffer().then(offer => {
             bra.offer(offer)
         } )
@@ -35,9 +37,10 @@ class Ket extends XKet{
 
     onCall(){
         if (!peer){
-            peer = new Caller(RTCPconfig, (id, data) => {
+            new Caller(RTCPconfig, (id, data) => {
+                console.log('Caller:event', id, data)
                 switch(id){
-                    case 'initialized' : this.createOffer(); break;
+                    case 'initialized' : this.createOffer(data.source); break;
                     case 'tracks' : this.startRemoteVideo(data.tracks); break;
                     case 'ice' : bra.ice(data.candidate); break;
                 }
@@ -47,7 +50,7 @@ class Ket extends XKet{
 
     onAnswer(){
         if (peer){
-            peer.createAnswer(this.offer).then(answer => {
+            peer.createAnswer(this.peerOffer).then(answer => {
                 bra.answer(answer)
             })
         }
@@ -64,11 +67,12 @@ class Bra extends XBra{
         super()
     }
 
-    onOffer(data){
+    onOffer(offer){
         if (!peer){
             peer = new Callee(RTCPconfig, (id, data) => {
+                console.log('Callee:event', id, data)
                 switch(id){
-                    case 'initialized' : ket.offer(data); break;
+                    case 'initialized' : ket.offer(offer); break;
                     case 'tracks' : this.startRemoteVideo(data.tracks); break;
                     case 'ice' : bra.ice(data.candidate); break;
                 }
@@ -77,6 +81,7 @@ class Bra extends XBra{
     }
 
     onAnswer(data){
+        console.log('Bra:onAnswer',  data)
         ket.answer(data)
     }
 

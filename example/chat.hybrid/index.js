@@ -24,7 +24,7 @@ class DeskSession{
 
 }
 
-class Desk extends require('./desk'){
+class Desk extends require('./core/desk'){
 	constructor(){
 		super(config.desk)
 	}
