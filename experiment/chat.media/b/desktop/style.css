@@ -28,18 +28,3 @@ html, body{
     height: 50px;
     background-color: gray;
 }
-
-#command{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 200px;
-}
-
-button{
-    width: 80px;
-}
-
-#answer{
-    display: none;
-}

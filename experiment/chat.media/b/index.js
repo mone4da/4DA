@@ -22,6 +22,11 @@ class Bra extends require('./prompt'){
 	onHangup(data){
 		this.ket.notifyHangup(data)
 	}
+
+	close(){
+		this.sendHangup('bye')
+		super.close()
+	}
 }
 
 class Ket{

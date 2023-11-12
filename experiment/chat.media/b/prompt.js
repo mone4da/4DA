@@ -51,7 +51,7 @@ class Prompt extends require('./core/session'){
 	onHangup(){}
 
 	//custom method
-	offer(data){
+	sendOffer(data){
 		this.send('data',msg.create(
 			this.address,
 			this.buddy,
@@ -60,7 +60,7 @@ class Prompt extends require('./core/session'){
 		))
 	}
 
-	answer(data){
+	sendAnswer(data){
 		this.send('data',msg.create(
 			this.address,
 			this.buddy,
@@ -69,7 +69,7 @@ class Prompt extends require('./core/session'){
 		))
 	}
 
-	ice(data){
+	sendIce(data){
 		this.send('data',msg.create(
 			this.address,
 			this.buddy,
@@ -78,7 +78,7 @@ class Prompt extends require('./core/session'){
 		))
 	}
 
-	hangup(data){
+	sendHangup(data){
 		this.send('data',msg.create(
 			this.address,
 			this.buddy,

@@ -8,20 +8,24 @@ class Bra extends require('./prompt'){
 	}
 
 	onOffer(data){
-		this.ket.offer(data)
+		this.ket.notifyOffer(data)
 	}
 
 	onAnswer(data){
-		console.log('Prompt:answer', data)
-		this.ket.answer(data)
+		this.ket.notifyAnswer(data)
 	}
 
 	onIce(data){
-		this.ket.ice(data)
+		this.ket.notifyIce(data)
 	}
 
 	onHangup(data){
-		this.ket.hangup(data)
+		this.ket.notifyHangup(data)
+	}
+
+	close(){
+		this.sendHangup('bye')
+		super.close()
 	}
 }
 
@@ -32,10 +36,10 @@ class Ket{
 
 	open(socket){
 		this.socket = socket
-		this.socket.on('offer', data => this.bra.offer(data))
-		this.socket.on('answer', data => this.bra.answer(data))
-		this.socket.on('ice', data => this.bra.ice(data))
-		this.socket.on('hangup', data => this.bra.hangup(data))
+		this.socket.on('offer', data => this.bra.sendOffer(data))
+		this.socket.on('answer', data => this.bra.sendAnswer(data))
+		this.socket.on('ice', data => this.bra.sendIce(data))
+		this.socket.on('hangup', data => this.bra.sendHangup(data))
 
 		this.bra = new Bra(this)
 	}
@@ -48,19 +52,23 @@ class Ket{
 		this.bra.close()
 	}
 
-	offer(data){
+	notifyOffer(data){
+		console.log('onOffer', data)
 		this.notify('offer', data.detail)
 	}
 
-	answer(data){
+	notifyAnswer(data){
+		console.log('onAnswer', data)
 		this.notify('answer', data.detail)
 	}
 
-	ice(data){
+	notifyIce(data){
+		console.log('onIce', data)
 		this.notify('ice', data.detail)
 	}
 
-	hangup(data){
+	notifyHangup(data){
+		console.log('onHangup', data)
 		this.notify('hangup', data.detail)
 	}
 
@@ -70,6 +78,10 @@ class Ket{
 class Desk extends require('./core/desk'){
 	constructor(){
 		super(config.desk)
+	}
+
+	onListening(){
+		console.log('on', config.desk.port)
 	}
 
 	createSession(socket){

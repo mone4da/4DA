@@ -1,64 +1,103 @@
+import XKet from './ket.js'
+import XBra from './bra.js'
 import {Caller, Callee} from './lib/peer.js'
-import XKet from "./ket.js"
-import XBra from "./bra.js"
 
 const RTCPconfig = {
     iceServers: [
         {
             urls: [
                 'stun:stun.l.google.com:19302', 
-                'stun:stun1.l.google.com:19302', 
+                'stun:stun1.l.google.com:19302'/*, 
                 'stun:stun2.l.google.com:19302',
-                'stun:stun3.l.google.com:19302']
+                'stun:stun3.l.google.com:19302'*/]
         }
     ]
 }
 
-
-let peer = null
-
-class Ket extends XKet{
+class NetCaller extends Caller{
     constructor(){
-        super()
+        super(RTCPconfig)
     }
 
-    answer(answer){
-        super.answer(answer)
-        peer.shareLocalStream(ket.getLocalStream())
+    initialze(config){
+        super.initialze(config)
+
+        this.remoteStream = new MediaStream()        
+
+        navigator
+        .mediaDevices
+        .getUserMedia({video: true, audio: false})
+        .then(stream => {
+            this.localStream = stream
+            ket.initVideos( this.localStream, this.remoteStream )
+
+            this.localStream
+                .getTracks()
+                .forEach(track => this.conn.addTrack(track, this.localStream))
+
+            this.createOffer()
+        })
     }
 
-    createOffer(p){
-        console.log('createOffer', p)
-        peer = p
-        peer.createOffer().then(offer => {
-            bra.offer(offer)
-        } )
+    onTracks(tracks){
+        console.log('tracks', tracks)
+        tracks.forEach(track => this.remoteStream.addTrack(track))
     }
 
-    onCall(){
-        if (!peer){
-            new Caller(RTCPconfig, (id, data) => {
-                console.log('Caller:event', id, data)
-                switch(id){
-                    case 'initialized' : this.createOffer(data.source); break;
-                    case 'tracks' : this.startRemoteVideo(data.tracks); break;
-                    case 'ice' : bra.ice(data.candidate); break;
-                }
-            })
-        }
+    onIceCandidate(candidate){
+        console.log('send candidate', candidate)
+
+        bra.sendIce(candidate)
     }
 
-    onAnswer(){
-        if (peer){
-            peer.createAnswer(this.peerOffer).then(answer => {
-                bra.answer(answer)
-            })
-        }
+    createOffer(){
+        super.createOffer().then(offer => {
+            console.log('send offer', offer)
 
+            bra.sendOffer(offer)
+        })
+    }
+}
+
+class NetCallee extends Callee{
+    constructor(){
+        super(RTCPconfig)
     }
 
-    onHangup(){
-        bra.hangup()
+    initialze(config){
+        super.initialze(config) 
+
+        this.remoteStream = new MediaStream()        
+
+        navigator
+        .mediaDevices
+        .getUserMedia({video: true, audio: false})
+        .then(stream => {
+            this. localStream = stream
+
+            ket.initVideos( this.localStream, this.remoteStream )
+
+            this.localStream
+                .getTracks()
+                .forEach(track => this.conn.addTrack(track, this.localStream))
+        })
+    }
+
+    onTracks(tracks){
+        console.log('tracks', tracks)
+        tracks.forEach(track => this.remoteStream.addTrack(track))
+    }
+
+    onIceCandidate(candidate){
+        console.log('send candidate', candidate)
+        bra.sendIce(candidate)
+    }
+
+    createAnswer(offer){
+        super.createAnswer(offer).then(answer => {
+            console.log('send answer', answer)
+            bra.sendAnswer(answer)
+        })
     }
 }
 
@@ -68,31 +107,29 @@ class Bra extends XBra{
     }
 
     onOffer(offer){
-        if (!peer){
-            peer = new Callee(RTCPconfig, (id, data) => {
-                console.log('Callee:event', id, data)
-                switch(id){
-                    case 'initialized' : ket.offer(offer); break;
-                    case 'tracks' : this.startRemoteVideo(data.tracks); break;
-                    case 'ice' : bra.ice(data.candidate); break;
-                }
-            })
-        }
+        console.log('onOffer', offer)
+        peer.createAnswer(offer)
     }
 
-    onAnswer(data){
-        console.log('Bra:onAnswer',  data)
-        ket.answer(data)
+    onIce(candidate){
+        console.log('onIce', candidate)
+        peer.addCandidate(candidate)
     }
 
-    onIce(data){
-        peer && peer.addCandidate(data)
+    onAnswer(answer){
+        console.log('onAnswer', answer)
+        peer.ready(answer)
     }
+}
 
-    onHangup(data){
-        ket.hangup(data)
+class Ket extends XKet{
+    constructor(){
+        super()
     }
 }
 
 let ket = new Ket()
 let bra = new Bra()
+let peer = new NetCallee()
+
+

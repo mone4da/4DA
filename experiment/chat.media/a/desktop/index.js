@@ -20,7 +20,9 @@ class NetCaller extends Caller{
     }
 
     initialze(config){
-        super.initialze(config)        
+        super.initialze(config)  
+        
+        this.remoteStream = new MediaStream()        
 
         navigator
         .mediaDevices
@@ -43,14 +45,14 @@ class NetCaller extends Caller{
     }
 
     onIceCandidate(candidate){
-        console.log('candidate', candidate)
+        console.log('send candidate', candidate)
 
         bra.sendIce(candidate)
     }
 
     createOffer(){
         super.createOffer().then(offer => {
-            console.log('offer', offer)
+            console.log('send offer', offer)
 
             bra.sendOffer(offer)
         })
@@ -65,21 +67,19 @@ class NetCallee extends Callee{
     initialze(config){
         super.initialze(config)        
 
+        this.remoteStream = new MediaStream()        
+
         navigator
         .mediaDevices
         .getUserMedia({video: true, audio: false})
         .then(stream => {
             this. localStream = stream
-            this.remoteStream = new MediaStream()
 
             ket.initVideos( this.localStream, this.remoteStream )
 
             this.localStream
                 .getTracks()
                 .forEach(track => this.conn.addTrack(track, this.localStream))
-
-            this.createAnswer()
-
         })
     }
 
@@ -89,12 +89,14 @@ class NetCallee extends Callee{
     }
 
     onIceCandidate(candidate){
-        console.log('candidate', candidate)
+        console.log('send candidate', candidate)
+        bra.sendIce(candidate)
     }
 
-    createAnswer(){
-        super.createAnswer().then(answer => {
-            console.log('answer', answer)
+    createAnswer(offer){
+        super.createAnswer(offer).then(answer => {
+            console.log('send answer', answer)
+            bra.sendAnswer(answer)
         })
     }
 }
@@ -102,6 +104,21 @@ class NetCallee extends Callee{
 class Bra extends XBra{
     constructor(){
         super()
+    }
+
+    onOffer(offer){
+        console.log('onOffer', offer)
+        peer.createAnswer(offer)
+    }
+
+    onIce(candidate){
+        console.log('onIce', candidate)
+        peer.addCandidate(candidate)
+    }
+
+    onAnswer(answer){
+        console.log('onAnswer', answer)
+        peer.ready(answer)
     }
 }
 

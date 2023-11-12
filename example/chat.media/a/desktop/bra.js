@@ -17,19 +17,19 @@ export default class XBra{
     onIce(_){}
     onHangup(_){}
 
-    offer(data){
+    sendOffer(data){
         this.send('offer', data)
     }
 
-    answer(data){
+    sendAnswer(data){
         this.send('answer', data)
     }
 
-    ice(data){
+    sendIce(data){
         this.send('ice', data)
     }
 
-    hangup(){
+    sendHangup(){
         this.send('hangup', Date.now())
     }
 

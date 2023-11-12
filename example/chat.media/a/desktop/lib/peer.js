@@ -1,22 +1,16 @@
 class Peer{
-    constructor(config, handle){
+    constructor(config){
+        this.initialze(config)        
+    }
+
+    initialze(config){
         this.conn = new RTCPeerConnection(config)
-        this.conn.ontrack = event => handle('tracks', {source: this,  tracks: event.streams[0].getTracks()})
-        this.conn.onicecandidate = async event => event.candidate && handle('ice', {source: this, candidate: event.candidate})
-
-        this.initialzed(handle)        
+        this.conn.ontrack = event => this.onTracks(event.streams[0].getTracks()) 
+        this.conn.onicecandidate = async event => event.candidate && this.onIceCandidate(event.candidate) 
     }
 
-    initialzed(handle){
-        handle('initialized', {source: this})
-    }
-
-    shareLocalStream(stream){
-        console.log('shareLocalStream')
-        stream.getTracks().forEach(track => {
-            this.conn.addTrack(track, stream)
-        })
-    }
+    onIceCandidate(candidate){}
+    onTracks(tracks){}
 
     addCandidate(candidate) {
         this.conn.remoteDescription && this.conn.addIceCandidate(new RTCIceCandidate(candidate))
@@ -24,8 +18,8 @@ class Peer{
 }
 
 class Caller extends Peer{
-    constructor(config, handle){
-        super(config, handle)
+    constructor(config){
+        super(config)
     }
 
     async createOffer(){
@@ -49,7 +43,6 @@ class Callee extends Peer{
     }
 
     async createAnswer(offer){
-        console.log('Callee:createAnswer', offer)
         this.conn.setRemoteDescription(offer)
         let answer = await this.conn.createAnswer()
         await this.conn.setLocalDescription(answer)
@@ -59,6 +52,7 @@ class Callee extends Peer{
 }
 
 export {
+    Peer,
     Caller,
     Callee
 }
