@@ -13,18 +13,34 @@ html, body{
 #console{
     display: flex;
     flex-direction: column;
+    align-content: center;
     width: 400px;
     margin: auto;
 }
 
+#videoBox{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
 #remoteVideo{
-    width: 200px;
-    height: 200px;
-    background-color: black;
+    width: 300px;
+ 
+    background-color: gray;
 }
 
 #localVideo{
-    width: 50px;
-    height: 50px;
+    width: 80px;
+    height: 80px;
     background-color: gray;
+}
+
+#bye{
+    color: orangered;
+    font-size: 20px;
+    height: 30px;
+    padding: auto;
+    background-color:black;
 }

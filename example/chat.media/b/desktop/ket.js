@@ -2,7 +2,10 @@
 export default class XKet{
     constructor(){
         this.localVideo = document.getElementById('localVideo')
-        this.remoteVide = document.getElementById('remoteVideo')
+        this.remoteVideo = document.getElementById('remoteVideo')
+        
+        this.bye = document.getElementById('bye')
+
     }
 
     initLocalVideo(stream){
@@ -10,7 +13,7 @@ export default class XKet{
     }
 
     initRemoteVideo(stream){
-        this.remoteVide.srcObject = stream
+        this.remoteVideo.srcObject = stream
     }
 
     initVideos(local, remote){
@@ -18,4 +21,7 @@ export default class XKet{
         this.initRemoteVideo(remote)
     }
 
+    showBye(text){
+        this.bye.innerText = text
+    }
 }
