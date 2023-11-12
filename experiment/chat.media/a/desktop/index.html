@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agently</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="root">
+        <div id="console">
+            <div>
+                <video id="remoteVideo" autoplay playsinline></video>
+                <video id="localVideo" autoplay playsinline></video>
+            </div>
+            <div id="command">
+                <button id="call">Call</button>
+                <button id="answer">Answer</button>
+                <button id="hangup">Hangup</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="./lib/socket.io.js"></script>
+<script src="./index.js" type="module"></script>
+</html>
