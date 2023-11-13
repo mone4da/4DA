@@ -18,7 +18,8 @@ class Prompt extends require('./core/session'){
 
 	onCommand(data, valid, signal){
 		switch(data.subject){
-			case 'text' : this.onText(data); break;
+			case 'plot' : this.onPlot(data); break;
+			case 'reset': this.onReset(data); break;
 		}
 	}
 
@@ -40,17 +41,28 @@ class Prompt extends require('./core/session'){
 	}
 
 	//custom event
-	onText(_){}
+	onPlot(_){}
+	onReset(_){}
 
 	//custom method
-	text(data){
+	sendPlot(data){
 		this.send('data',msg.create(
 			this.address,
 			this.buddy,
-			'text',
+			'plot',
 			data
 		))
 	}
+
+	sendReset(data){
+		this.send('data',msg.create(
+			this.address,
+			this.buddy,
+			'reset',
+			data
+		))
+	}
+
 }
 
 module.exports = Prompt

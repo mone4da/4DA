@@ -20,8 +20,8 @@ class NetCaller extends Caller{
     }
 
     initialze(config){
-        super.initialze(config)  
-        
+        super.initialze(config)
+
         this.remoteStream = new MediaStream()        
 
         navigator
@@ -65,7 +65,7 @@ class NetCallee extends Callee{
     }
 
     initialze(config){
-        super.initialze(config)        
+        super.initialze(config) 
 
         this.remoteStream = new MediaStream()        
 
@@ -109,7 +109,6 @@ class Bra extends XBra{
     onOffer(offer){
         console.log('onOffer', offer)
         peer.createAnswer(offer)
-        ket.showBye('')
     }
 
     onIce(candidate){
@@ -120,12 +119,6 @@ class Bra extends XBra{
     onAnswer(answer){
         console.log('onAnswer', answer)
         peer.ready(answer)
-        ket.showBye('')
-    }
-
-    onHangup(data){
-        console.log('hangup', data)
-        ket.showBye(data)
     }
 }
 

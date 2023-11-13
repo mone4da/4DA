@@ -6,8 +6,12 @@ class Bra extends require('./prompt'){
 		this.ket = ket
 	}
 
-	onText(data){
-		this.ket.text(data)
+	onPlot(data){
+		this.ket.plot(data)
+	}
+
+	onReset(data){
+		this.ket.reset(data)
 	}
 }
 
@@ -20,7 +24,8 @@ class Ket{
 		this.bra = new Bra(this)
 
 		this.socket = socket
-		this.socket.on('text', data => this.bra.text(data))
+		this.socket.on('plot', data => this.bra.sendPlot(data))
+		this.socket.on('reset', data => this.bra.sendReset(data))
 	}
 
 	notify(id, data){
@@ -31,8 +36,12 @@ class Ket{
 		this.bra.close()
 	}
 
-	text(data){
-		this.notify('text', data.detail)
+	plot(data){
+		this.notify('plot', data.detail)
+	}
+
+	reset(data){
+		this.notify('reset', data.detail)
 	}
 
 }
@@ -40,6 +49,10 @@ class Ket{
 class Desk extends require('./core/desk'){
 	constructor(){
 		super(config.desk)
+	}
+
+	onListening(){
+		console.log('on', config.desk.port)
 	}
 
 	createSession(socket){

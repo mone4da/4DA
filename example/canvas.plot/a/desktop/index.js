@@ -6,8 +6,12 @@ class Ket extends XKet{
         super()
     }
 
-    onText(data){
-        bra.text(data)
+    onPlot(data){
+        bra.sendPlot(data)
+    }
+
+    onReset(data){
+        bra.sendReset(data)
     }
 }
 
@@ -16,8 +20,12 @@ class Bra extends XBra{
         super()
     }
 
-    onText(data){
-        ket.appendText(data)
+    onPlot(data){
+        ket.addPlot(data)
+    }
+
+    onReset(data){
+        ket.reset(data)
     }
 }
 
