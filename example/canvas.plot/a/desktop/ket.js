@@ -1,6 +1,7 @@
 export default class XKet{
     constructor(){
       this.size = 10
+      let color = 'red'
       this.canvas = document.getElementById('canvas')
       
       document.getElementById('reset').onclick = () => {
@@ -14,9 +15,9 @@ export default class XKet{
         let r = this.canvas.getBoundingClientRect()
         let x = event.clientX - r.x
         let y = event.clientY - r.y
-        this.addPlot({x,y})
+        this.addPlot({x,y, color})
 
-        this.onPlot({x,y})
+        this.onPlot({x,y, color})
       }
 
     }
@@ -25,7 +26,7 @@ export default class XKet{
     onReset(data){}
 
     addPlot(p){
-      this.canvas.innerHTML += `<circle cx="${p.x}" cy="${p.y}" r="${this.size}" stroke="red" stroke-width="3" fill="red" />`
+      this.canvas.innerHTML += `<circle cx="${p.x}" cy="${p.y}" r="${this.size}" stroke="${p.color}" stroke-width="3" fill="${p.color}" />`
     }
 
     reset(data){
