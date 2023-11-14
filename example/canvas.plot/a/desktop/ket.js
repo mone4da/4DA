@@ -11,13 +11,26 @@ export default class XKet{
         this.onReset()
       }
 
-      this.canvas.onmouseup = event => {
-        let r = this.canvas.getBoundingClientRect()
-        let x = event.clientX - r.x
-        let y = event.clientY - r.y
-        this.addPlot({x,y, color})
+      let plotting = false
+      this.canvas.onmousedown = () => {
+          plotting = true
+          this.canvas.style.cursor = 'grabbing'
+      }
 
-        this.onPlot({x,y, color})
+      this.canvas.onmouseup = () => {
+        plotting = false
+        this.canvas.style.cursor = 'default'
+    }
+
+      this.canvas.onmousemove = event => {
+        if (plotting){
+          let r = this.canvas.getBoundingClientRect()
+          let x = event.clientX - r.x
+          let y = event.clientY - r.y
+          this.addPlot({x,y, color})
+
+          this.onPlot({x,y, color})
+        }
       }
 
     }
