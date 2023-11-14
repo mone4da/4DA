@@ -1,6 +1,6 @@
 import XKet from './ket.js'
 import XBra from './bra.js'
-import {Caller, Callee} from './lib/peer.js'
+import {StreamCaller, StreamCallee} from './lib/peer.js'
 
 const RTCPconfig = {
     iceServers: [
@@ -14,34 +14,14 @@ const RTCPconfig = {
     ]
 }
 
-class NetCaller extends Caller{
+class NetCaller extends StreamCaller{
     constructor(){
         super(RTCPconfig)
     }
 
-    initialze(config){
-        super.initialze(config)  
-        
-        this.remoteStream = new MediaStream()        
-
-        navigator
-        .mediaDevices
-        .getUserMedia({video: true, audio: false})
-        .then(stream => {
-            this.localStream = stream
-            ket.initVideos( this.localStream, this.remoteStream )
-
-            this.localStream
-                .getTracks()
-                .forEach(track => this.conn.addTrack(track, this.localStream))
-
-            this.createOffer()
-        })
-    }
-
-    onTracks(tracks){
-        console.log('tracks', tracks)
-        tracks.forEach(track => this.remoteStream.addTrack(track))
+    onStreams(){
+        ket.initVideos( this.localStream, this.remoteStream )
+        this.createOffer()
     }
 
     onIceCandidate(candidate){
@@ -59,33 +39,13 @@ class NetCaller extends Caller{
     }
 }
 
-class NetCallee extends Callee{
+class NetCallee extends StreamCallee{
     constructor(){
         super(RTCPconfig)
     }
 
-    initialze(config){
-        super.initialze(config)        
-
-        this.remoteStream = new MediaStream()        
-
-        navigator
-        .mediaDevices
-        .getUserMedia({video: true, audio: false})
-        .then(stream => {
-            this. localStream = stream
-
-            ket.initVideos( this.localStream, this.remoteStream )
-
-            this.localStream
-                .getTracks()
-                .forEach(track => this.conn.addTrack(track, this.localStream))
-        })
-    }
-
-    onTracks(tracks){
-        console.log('tracks', tracks)
-        tracks.forEach(track => this.remoteStream.addTrack(track))
+    onStreams(){
+        ket.initVideos( this.localStream, this.remoteStream )
     }
 
     onIceCandidate(candidate){
@@ -107,18 +67,20 @@ class Bra extends XBra{
     }
 
     onOffer(offer){
-        console.log('onOffer', offer)
         peer.createAnswer(offer)
     }
 
     onIce(candidate){
-        console.log('onIce', candidate)
         peer.addCandidate(candidate)
     }
 
     onAnswer(answer){
-        console.log('onAnswer', answer)
         peer.ready(answer)
+        ket.setMessage('')
+    }
+
+    onHangup(data){
+        ket.setMessage(data)
     }
 }
 
