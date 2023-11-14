@@ -1,18 +1,7 @@
 import XKet from './ket.js'
 import XBra from './bra.js'
 import {StreamCaller, StreamCallee} from './lib/peer.js'
-
-const RTCPconfig = {
-    iceServers: [
-        {
-            urls: [
-                'stun:stun.l.google.com:19302', 
-                'stun:stun1.l.google.com:19302'/*, 
-                'stun:stun2.l.google.com:19302',
-                'stun:stun3.l.google.com:19302'*/]
-        }
-    ]
-}
+import { RTCPconfig } from './config.js'
 
 class NetCaller extends StreamCaller{
     constructor(){
