@@ -1,6 +1,6 @@
 // Define the dimensions of the maze
-const mazeWidth = 20;
-const mazeHeight = 20;
+const mazeWidth = 40;
+const mazeHeight = 40;
 
 // Create a 2D array filled with walls (1s)
 const maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1));
