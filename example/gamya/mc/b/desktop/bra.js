@@ -14,7 +14,7 @@ export default class XBra{
     onShoot(_){}
 
     sendMove(data){
-        this.send('text', data)
+        this.send('move', data)
     }
 
     sendShoot(data){

@@ -1,25 +1,61 @@
-export default class XKet{
+class Ket{
     constructor(state){
       this.maze = document.getElementById('maze')
-      this.farmer = state.farmer
+      this.player = state.player
 
-      let data = state.maze.data.split('\n')
+      this.data = state.maze.data.split('\n')
                 .map(line => line.split(' ')
                 .map(v => parseInt(v)))
 
-      let rowc = data.length
-      let colc = data[0].length
-      this.scale = {x: 100 / colc, y: 100/rowc }
+      this.rowc = this.data.length
+      this.colc = this.data[0].length
 
-      this.drawMaze( data )
+      this.scale = {x: 100/this.colc , y: 100/this.rowc }
 
-      let farmer = state.farmer
-      for( let id of Object.keys(farmer))
-        this.move({id, position: farmer[id], type: 0})
+      this.drawMaze()
+      this.updatePeers(state.peer)
+      this.updatePlayer()
+      this.onMove(this.player)
 
-      let chicken = state.chicken
-        for( let id of Object.keys(chicken))
-          this.move({id, position: chicken[id], type: 1})
+      this.control()
+    }
+
+    control(){
+      let valid = (x,y) => {
+        return    x >= 0 && x < this.colc
+              &&  y >= 0 && y < this.rowc
+              && !this.data[x][y]
+      }
+
+       window.onkeydown = event => {
+        let delta = {x:0, y: 0}
+        switch(event.key){
+          case 'ArrowUp': delta.y = -1; break;
+          case 'ArrowDown' : delta.y = 1; break;
+          case 'ArrowLeft' : delta.x = -1; break;
+          case 'ArrowRight' : delta.x = 1; break;
+        }
+
+        let x = this.player.position.x + delta.x
+        let y = this.player.position.y + delta.y
+
+        if (valid(x,y)){
+          this.player.position.x = x
+          this.player.position.y = y
+          this.updatePlayer()
+
+          this.onMove(this.player)
+        }
+       }
+    }
+
+    updatePlayer(){
+       this.move(this.player)
+    }
+
+    updatePeers(peer){
+      for( let id of Object.keys(peer))
+        this.move({id, position: peer[id].position, color: peer[id].color})
     }
 
     wall(row, col, w){
@@ -31,55 +67,49 @@ export default class XKet{
       return `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`
     }
 
-    drawMaze(data){
-      let html = data.map((row, colidx) => row.map((w, rowidx) => this.wall(rowidx,colidx,w) ). join('')).join()
+    drawMaze(){
+      let html = this.data.map((row, colidx) => row.map((w, rowidx) => this.wall(rowidx,colidx,w) ). join('')).join()
       this.maze.innerHTML = html
     }
 
     onMove(data){}
     onShoot(data){}
 
-    moveFarmer(data){
-        let avatar = (col,row) => {
-          let x = col * this.scale.x
-          let y = row * this.scale.y
-          let width = this.scale.x
-          let height = this.scale.y
-          let color = 'blue'
-
-          return `<rect id="${data.id}" x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`
-        }
-
-      let e = document.getElementById(data.id)
-      e && e.remove()
-
-      this.maze.innerHTML += avatar(data.position.x, data.position.y)
-    }
-
-    moveChicken(data){
-        let avatar = (col,row) => {
-          let x = col * this.scale.x
-          let y = row * this.scale.y
-          let width = this.scale.x
-          let height = this.scale.y
-          let color = 'red'
-
-          return `<rect id="${data.id}" x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`
-        }
-
-      let e = document.getElementById(data.id)
-      e && e.remove()
-
-      this.maze.innerHTML += avatar(data.position.x, data.position.y)
-    }
-
     move(data){
-      if (data.type === 0)
-        this.moveFarmer(data)
-     else
-        this.moveChicken(data)
-    }
+        let avatar = (col,row) => {
+          let x = col * this.scale.x
+          let y = row * this.scale.y
+          let width = this.scale.x
+          let height = this.scale.y
+          let color = data.color
 
-     shoot(data){
-     }
+          return `<rect id="${data.id}" x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`
+        }
+
+      let e = document.getElementById(data.id)
+      e && e.remove()
+
+      this.maze.innerHTML += avatar(data.position.x, data.position.y)
+    }
+}
+
+class FarmerKet extends Ket{
+  constructor(state){
+    super(state)
+  }
+}
+
+class ChickenKet extends Ket{
+  constructor(state){
+    super(state)
+  }
+
+  shoot(data){
+  }
+
+}
+
+export{
+  FarmerKet,
+  ChickenKet
 }

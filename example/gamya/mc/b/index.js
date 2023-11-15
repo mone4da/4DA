@@ -6,6 +6,14 @@ class Bra extends require('./prompt'){
 		this.ket = ket
 	}
 
+	onMove(data){
+		this.ket.move(data)
+	}
+
+	onShoot(data){
+		this.ket.shoot(data)
+	}
+
 }
 
 class Ket{
@@ -25,6 +33,16 @@ class Ket{
 	notify(id, data){
 		this.socket && this.socket.emit(id, data)
 	}
+
+	move(data){
+		console.log('mve', data.detail)
+		this.notify('move', data.detail)
+	}
+
+	shoot(data){
+		this.notify('shoot', data.detail)
+	}
+
 
 	close(){
 		this.bra.close()

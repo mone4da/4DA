@@ -46,10 +46,11 @@ class Prompt extends require('./core/session'){
 
 	//custom method
 	move(data){
+		console.log(data)
 		this.send('data',msg.create(
 			this.address,
 			this.buddy,
-			'text',
+			'move',
 			data
 		))
 	}

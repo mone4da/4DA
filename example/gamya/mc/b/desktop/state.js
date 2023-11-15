@@ -21,12 +21,10 @@ let maze = {
 1 0 0 0 0 0 1 0 0 0 0 0 1 0 1 0 0 0 0 0`
 }
 
-let farmer = {
-    'xxxxx!plusmedium!4digitalasset!com' : {x: 1, y:19}
+let peer = {
+    'xxxxx!plusmedium!4digitalasset!com' : {color: 'black', position: {x: 1, y:19}}
 }
 
-let chicken = {
-    'yyyyy!plusmedium!4digitalasset!com' : {x: 7, y:8}
-}
+const player = {id: 'yyyyy!plusmedium!4digitalasset!com', color: 'red', type:0, position : {x:1, y:19}}
 
-export default {maze, farmer, chicken}
+export default {maze, peer, player}

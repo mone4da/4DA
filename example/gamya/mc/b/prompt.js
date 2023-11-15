@@ -49,7 +49,7 @@ class Prompt extends require('./core/session'){
 		this.send('data',msg.create(
 			this.address,
 			this.buddy,
-			'text',
+			'move',
 			data
 		))
 	}

@@ -1,8 +1,8 @@
 import state from "./state.js"
-import XKet from "./ket.js"
+import {FarmerKet, ChickenKet} from "./ket.js"
 import XBra from "./bra.js"
 
-class Ket extends XKet{
+class Ket extends FarmerKet{
     constructor(){
         super(state)
     }
@@ -22,7 +22,13 @@ class Bra extends XBra{
     }
 
     onMove(data){
-        ket.move(data)
+        let player = state.peer[data.id]
+        if (player){
+            player.position.x = data.position.x
+            player.position.y = data.position.y
+            
+            ket.updatePeers(state.peer)
+        }
     }
 
     onShoot(data){
@@ -30,5 +36,6 @@ class Bra extends XBra{
     }
 }
 
-let ket = new Ket()
+
 let bra = new Bra()
+let ket = new Ket()
