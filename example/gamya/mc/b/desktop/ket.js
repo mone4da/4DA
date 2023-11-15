@@ -86,11 +86,13 @@ class Ket{
           return `<rect id="${data.id}" x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`
         }
 
-      let e = document.getElementById(data.id)
-      e && e.remove()
-
-      this.maze.innerHTML += avatar(data.position.x, data.position.y)
-    }
+        let e = document.getElementById(data.id)
+        if (e){
+          e.style.x = data.position.x * this.scale.x
+          e.style.y = data.position.y * this.scale.y
+        }else  
+          this.maze.innerHTML += avatar(data.position.x, data.position.y)
+      }
 }
 
 class FarmerKet extends Ket{

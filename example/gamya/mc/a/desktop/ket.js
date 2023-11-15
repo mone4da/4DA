@@ -87,9 +87,11 @@ class Ket{
         }
 
       let e = document.getElementById(data.id)
-      e && e.remove()
-
-      this.maze.innerHTML += avatar(data.position.x, data.position.y)
+      if (e){
+        e.style.x = data.position.x * this.scale.x
+        e.style.y = data.position.y * this.scale.y
+      }else  
+        this.maze.innerHTML += avatar(data.position.x, data.position.y)
     }
 }
 
