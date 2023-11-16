@@ -1,7 +1,18 @@
-class Ket{
-    constructor(state){
-      this.maze = document.getElementById('maze')
+const html = 
+`<svg viewBox="0 0 100 100" id="maze">
+</svg>`
+
+class Arena{
+    constructor(root, state){
+        this.root = root
+        this.show()
+
+       this.maze = document.getElementById('maze')
+
       this.player = state.player
+
+      this.inc = state.maze.in
+      this.outc = state.maze.out
 
       this.data = state.maze.data.split('\n')
                 .map(line => line.split(' ')
@@ -18,6 +29,10 @@ class Ket{
       this.onMove(this.player)
 
       this.control()
+    }
+
+    show(){
+        root.innerHTML = html
     }
 
     control(){
@@ -59,11 +74,20 @@ class Ket{
     }
 
     wall(row, col, w){
+      let material = (x, y) => {
+        if (x === this.inc.x && y === this.inc.y)
+          return 'brown'
+        if (x === this.outc.x && y === this.outc.y)
+          return 'gray'
+          
+        return w ? 'green' : 'white'
+      }
+
       let x = col * this.scale.x
       let y = row * this.scale.y
       let width = this.scale.x
       let height = this.scale.y
-      let color = w ? 'green' : 'white'
+      let color = material(x, y)
       return `<rect x="${x}" y="${y}" width="${width}" height="${height}" fill="${color}" />`
     }
 
@@ -95,15 +119,15 @@ class Ket{
     }
 }
 
-class FarmerKet extends Ket{
-  constructor(state){
-    super(state)
+class FarmerArena extends Arena{
+  constructor(root, state){
+    super(root, state)
   }
 }
 
-class ChickenKet extends Ket{
-  constructor(state){
-    super(state)
+class ChickenArena extends Arena{
+  constructor(root, state){
+    super(root, state)
   }
 
   shoot(data){
@@ -112,6 +136,6 @@ class ChickenKet extends Ket{
 }
 
 export{
-  FarmerKet,
-  ChickenKet
+  FarmerArena,
+  ChickenArena
 }

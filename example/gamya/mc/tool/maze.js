@@ -1,6 +1,6 @@
 // Define the dimensions of the maze
-const mazeWidth = 40;
-const mazeHeight = 40;
+const mazeWidth = 42;
+const mazeHeight = 42;
 
 // Create a 2D array filled with walls (1s)
 const maze = Array.from({ length: mazeHeight }, () => Array(mazeWidth).fill(1));
@@ -40,7 +40,7 @@ const startY = Math.floor(Math.random() * (mazeHeight / 2)) * 2 + 1;
 generateMaze(startX, startY);
 
 // Print the generated maze
-for (const row of maze) {
-  console.log(row.join(' '));
+for (const row of maze.slice(1, maze.length-1)) {
+  console.log(row.slice(1, row.length-1).join(' '));
 }
 
