@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Collatz</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="root">
+        <div id="diagram">
+            <canvas id="chart"></canvas>
+            <svg id="overlay" viewBox="0 0 800 500">
+                <line x1="0" y1="250" x2="800" y2="250" stroke-width=".5" stroke="white" />
+                <line x1="400" y1="0" x2="400" y2="800" stroke-width=".5" stroke="white" />
+                <text class="chart-axis-name"  x="385" y="15" fill="green" stroke-width=".5">P</text>
+                <text class="chart-axis-name" x="785" y="265" fill="green" stroke-width=".5">M</text>
+                
+                <text x="210" y="320" fill="green" class="chart-formula">P</text>
+                <text x="100" y="365" fill="green" class="chart-formula">M2</text>
+            </svg>
+       </div>
+
+       <div>
+        <div style="font-size: 30px;"><label>range: </label> <label id="limit"></label></div>
+        <div style="font-size: 30px;"><label>M: </label> <label id="m"></label></div>
+        <div style="font-size: 30px;"><label>P: </label> <label id="p"></label></div>
+
+        <div id="explanation">
+            <p>Observe that the set of points (m,p) behaves as an attractor for the Collatz sequence.</p>
+            <p>This set is organized in layers starting at p=0. Notice that the density is highest near the axes.</p>
+            <p>Notice also the clustering of these layers and the gap above the first one.</p>
+            <p>m is an odd number and p is a non-negative integer representing how many times a Collatz term is divided before it becomes odd</p>
+
+            <p>This suggests that in order to prove Collatzs it is enough to focus on a proof for the even numbers.</p>
+            <p>Indeed, suppose that we have proved Collatz up to an odd number q = 2k+1, and let's find the truth for the next one.</p>
+            <p>The next number is 2k + 1 + 1 = 2k + 2 = 2(k+1)</p>
+            <p>Applying the rule for even numbers we get k+1 by the next iteration.</p>
+            <p>But k + 1 is strictly less than 2k + 1, wich is our hypothesis</p>
+            <p>Q.E.D</p>
+        </div>
+    </div>
+
+    </div>
+</body>
+<script src="./socket.io.js"></script>
+<script src="./index.js" type="module"></script>
+</html>
